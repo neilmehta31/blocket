@@ -6,7 +6,7 @@ export const EthWallet = ({mnemonic}) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [addresses, setAddresses] = useState([]);
     const [ethBalances, setEthBalances] = useState({});
-   console.log("import.meta.env.VITE_ALCHEMY_API_KEY : " + import.meta.env.VITE_ALCHEMY_API_KEY);
+    
     const ethersProvider = new AlchemyProvider("sepolia", import.meta.env.VITE_ALCHEMY_API_KEY);
 
     useEffect(() =>{
