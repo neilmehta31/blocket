@@ -1,10 +1,32 @@
-import { useState } from "react"
-import { Wallet, HDNodeWallet } from "ethers";
+import { useEffect, useState } from "react"
+import { Wallet, HDNodeWallet, AlchemyProvider } from "ethers";
 import { mnemonicToSeed } from "bip39";
 
 export const EthWallet = ({mnemonic}) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [addresses, setAddresses] = useState([]);
+    const [ethBalances, setEthBalances] = useState({});
+   console.log("import.meta.env.VITE_ALCHEMY_API_KEY : " + import.meta.env.VITE_ALCHEMY_API_KEY);
+    const ethersProvider = new AlchemyProvider("sepolia", import.meta.env.VITE_ALCHEMY_API_KEY);
+
+    useEffect(() =>{
+      async function fetchBalances() {
+      const balances = await Promise.all(
+        addresses.map(async (address) => {
+          const balance = await ethersProvider.getBalance(address);
+          return { address, balance: balance.toString() };
+        })
+      );
+
+      const balanceMap = balances.reduce((acc, { address, balance }) => {
+        acc[address] = balance / 1e18; // Convert from wei to ether
+        return acc;
+      }, {});
+
+      setEthBalances(prev => ({ ...prev, ...balanceMap }));
+      }
+      fetchBalances();
+    },[addresses]);
 
     if(mnemonic==null){
         return(
@@ -35,7 +57,7 @@ export const EthWallet = ({mnemonic}) => {
           </button>
 
           {addresses.map((p) => (
-            <div>Eth - {p}</div>
+            <div>Eth - {p} - balance: {ethBalances[p]}</div>
           ))}
         </div>
       );

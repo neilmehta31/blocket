@@ -1,13 +1,28 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { mnemonicToSeed } from "bip39";
 import { derivePath } from "ed25519-hd-key";
-import { Keypair } from "@solana/web3.js";
+import { Keypair, Connection, clusterApiUrl } from "@solana/web3.js";
 import nacl from "tweetnacl"
 
 export function SolanaWallet({ mnemonic }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [publicKeys, setPublicKeys] = useState([]);
+    const [solBalances, setSolBalances] = useState({});
+    
+    const solanaConnection = new Connection(clusterApiUrl("devnet"));
 
+    useEffect(() => {
+        async function fetchBalances() {
+          for (const key of publicKeys) {
+            const solBalance = await solanaConnection.getBalance(key);
+            setSolBalances((prev) => ({ ...prev, [key.toBase58()]: solBalance / 1e9 }));
+          }
+        }
+
+        fetchBalances();
+        
+      }, [publicKeys]);
+    
     if(mnemonic==null){
         return(
             <div >
@@ -35,7 +50,7 @@ export function SolanaWallet({ mnemonic }) {
           Add Solana wallet
         </button>
         {publicKeys.map((p) => (
-          <div>{p.toBase58()}</div>
+          <div>{p.toBase58()} balance: {solBalances[p]}</div>
         ))}
       </div>
     );}
