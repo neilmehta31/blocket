@@ -1,5 +1,7 @@
 import { useConnection, useWallet } from "@solana/wallet-adapter-react"
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { ShowSolBalance } from "./ShowBalance";
+import { SendTokens } from "./SendSol";
 
 
 // The useWallet `hook` provides the wallet variable inside the 
@@ -23,5 +25,7 @@ export function Airdrop(){
         {/* Hi account holder : {wallet.publicKey.toString()} */}
         <input id="publicKey" type="text" placeholder="Amount"></input>
         <button onClick={sendAirdropToUser}>Send Airdrop</button>
+        <ShowSolBalance />
+        <SendTokens />
     </div>
 }
