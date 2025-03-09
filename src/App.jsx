@@ -8,7 +8,7 @@ import {
 import { generateMnemonic } from "bip39";
 import { React, useMemo, useState } from 'react';
 import './App.css';
-import { Airdrop } from "./components/Airdrop";
+import { Airdrop, SolTransaction } from "./components/Airdrop";
 import { EthWallet } from './components/EthWallet';
 import { SolanaWallet } from './components/SolanaWallet';
 
@@ -52,7 +52,8 @@ function App() {
           </div>
           <WalletMultiButton></WalletMultiButton>
           <WalletDisconnectButton></WalletDisconnectButton>
-          <Airdrop></Airdrop>
+          {/* <Airdrop /> */}
+          <SolTransaction />
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
